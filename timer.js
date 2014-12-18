@@ -30,12 +30,24 @@ function animationTimer()
 		d.setHours(endTime.getHours()-d.getHours());
 		d.setMinutes(endTime.getMinutes()-d.getMinutes());
 		d.setSeconds(endTime.getSeconds()-d.getSeconds());
+    var s=getFormatedTimeString(d);
+    if (s=="02:00")
+      playSound();
 		d3.select("#timelabel")[0][0].innerHTML = getFormatedTimeString(d);
 		requestAnimFrame(animationTimer);
 	}
 	else
+  {
 		d3.select("#timelabel")[0][0].innerHTML = "Ende";
+    playSound();
+  }
 
+}
+var audio = new Audio('Sounds/bell.mp3');
+function playSound()
+{
+  if(audio.paused)  
+    audio.play();
 }
 function getFormatedTimeString(d)
 {
