@@ -4,7 +4,7 @@ function initForm()
 	var m = d3.select("#menu");
 	m.selectAll("*").remove();
 	m.append("input").attr("id", "timeinput").attr("value", "0:20:00");
-  m.append("button").attr("onclick","startTimer()").html("Start");
+	m.append("button").attr("onclick", "startTimer()").html("Start");
 	m.append("input").attr("id", "timesize").attr("value", "400px").attr("onchange", "updateFontSize()");
 	var t = d3.select("#timer");
 	t.selectAll("*").remove();
@@ -19,7 +19,7 @@ function startTimer()
 	endTime.setHours(endTime.getHours() + parseInt(t[0]));
 	endTime.setMinutes(endTime.getMinutes() + parseInt(t[1]));
 	endTime.setSeconds(endTime.getSeconds() + parseInt(t[2]));
-  animationTimer();
+	animationTimer();
 }
 
 function animationTimer()
@@ -27,27 +27,27 @@ function animationTimer()
 	var d = new Date();
 	if(d < endTime)
 	{
-		d.setHours(endTime.getHours()-d.getHours());
-		d.setMinutes(endTime.getMinutes()-d.getMinutes());
-		d.setSeconds(endTime.getSeconds()-d.getSeconds());
-    var s=getFormatedTimeString(d);
-    if (s=="02:00")
-      playSound();
+		d.setHours(endTime.getHours() - d.getHours());
+		d.setMinutes(endTime.getMinutes() - d.getMinutes());
+		d.setSeconds(endTime.getSeconds() - d.getSeconds());
+		var s = getFormatedTimeString(d);
+		if (s == "02:00")
+			playSound();
 		d3.select("#timelabel")[0][0].innerHTML = getFormatedTimeString(d);
 		requestAnimFrame(animationTimer);
 	}
 	else
-  {
+	{
 		d3.select("#timelabel")[0][0].innerHTML = "Ende";
-    playSound();
-  }
+		playSound();
+	}
 
 }
 var audio = new Audio('Sounds/bell.mp3');
 function playSound()
 {
-  if(audio.paused)  
-    audio.play();
+	if(audio.paused)
+		audio.play();
 }
 function getFormatedTimeString(d)
 {
