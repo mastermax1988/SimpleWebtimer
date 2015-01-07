@@ -1,26 +1,54 @@
 var endTime;
+var bPaused;
 function initForm()
 {
-	var m = d3.select("#menu");
+  bPaused=false;
+  var m = d3.select("#menu");
 	m.selectAll("*").remove();
 	m.append("input").attr("id", "timeinput").attr("value", "0:20:00");
-	m.append("button").attr("onclick", "startTimer()").html("Start");
+	m.append("button").attr("onclick", "startTimer()").html("Neustart");
+	m.append("button").attr("onclick", "pauseTimer()").html("Pause / Fortsetzen");
 	m.append("input").attr("id", "timesize").attr("value", "400px").attr("onchange", "updateFontSize()");
 	var t = d3.select("#timer");
 	t.selectAll("*").remove();
 	t.append("label").attr("id", "timelabel")
 }
 
+
 function startTimer()
 {
+	bPaused = false;
 	updateFontSize();
 	var t = d3.select("#timeinput")[0][0].value.split(":");
+	setTime(t);
+	animationTimer();
+}
+function setTime(t)
+{
 	endTime = new Date();
 	endTime.setHours(endTime.getHours() + parseInt(t[0]));
 	endTime.setMinutes(endTime.getMinutes() + parseInt(t[1]));
 	endTime.setSeconds(endTime.getSeconds() + parseInt(t[2]));
-	animationTimer();
 }
+
+function pauseTimer()
+{
+	if(bPaused)
+	{
+		bPaused = false;
+		var t = d3.select("#timelabel")[0][0].innerHTML.split(":");
+		if(t.length == 2)
+		{
+			t[2] = t[1];
+			t[1] = t[0];
+			t[0] = 0;
+		}
+		setTime(t);
+		animationTimer();
+	}
+	else
+    bPaused=true;
+	}
 
 function animationTimer()
 {
@@ -34,7 +62,8 @@ function animationTimer()
 		if (s == "02:00")
 			playSound();
 		d3.select("#timelabel")[0][0].innerHTML = getFormatedTimeString(d);
-		requestAnimFrame(animationTimer);
+		if(!bPaused)
+			requestAnimFrame(animationTimer);
 	}
 	else
 	{
