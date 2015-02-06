@@ -2,23 +2,28 @@ var endTime;
 var bPaused;
 function initForm()
 {
-  bPaused=false;
-  var m = d3.select("#menu");
+	bPaused = false;
+	var m = d3.select("#menu");
 	m.selectAll("*").remove();
 	m.append("input").attr("id", "timeinput").attr("value", "0:20:00");
 	m.append("button").attr("onclick", "startTimer()").html("Neustart");
 	m.append("button").attr("onclick", "pauseTimer()").html("Pause / Fortsetzen");
-	m.append("input").attr("id", "timesize").attr("value", "400px").attr("onchange", "updateFontSize()");
+	m.append("input").attr("id", "timesize").attr("value", "400").attr("onchange", "updateFontSizeAndCB()");
+	m.append("label").html("Textbox zeigen");
+	m.append("input").attr("type", "checkbox").attr("id", "sta").attr("onchange", "updateFontSizeAndCB()");
 	var t = d3.select("#timer");
 	t.selectAll("*").remove();
+	t.append("textarea").attr("rows", "1").attr("cols", 20).attr("id", "ta");
+	t.append("br");
 	t.append("label").attr("id", "timelabel")
+	updateFontSizeAndCB();
 }
 
 
 function startTimer()
 {
 	bPaused = false;
-	updateFontSize();
+	updateFontSizeAndCB();
 	var t = d3.select("#timeinput")[0][0].value.split(":");
 	setTime(t);
 	animationTimer();
@@ -47,8 +52,8 @@ function pauseTimer()
 		animationTimer();
 	}
 	else
-    bPaused=true;
-	}
+		bPaused = true;
+}
 
 function animationTimer()
 {
@@ -91,8 +96,12 @@ function getFormatedTimeString(d)
 	s += d.getSeconds();
 	return s;
 }
-function updateFontSize()
+function updateFontSizeAndCB()
 {
 	var s = d3.select("#timesize")[0][0].value;
-	d3.select("#timelabel").attr("style", "font-size: " + s);
+	d3.select("#timelabel").attr("style", "font-size: " + s + "px");
+	d3.select("#ta").attr("style", "font-size: " + s / 10 + "px");
+	if(!d3.select("#sta")[0][0].checked)
+		d3.select("#ta")[0][0].style = "display: none";
 }
+
